@@ -1,7 +1,7 @@
 Sequel.migration do
     change do
         create_table :logs do
-            primary_key :id
+            Integer :id
             String :url, :null => false
             String :referrer, :null => true
             DateTime :created_at, :null => false

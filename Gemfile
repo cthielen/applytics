@@ -35,4 +35,4 @@ gem 'sequel', '~> 4.36.0'
 gem 'mysql2'
 
 # Used by dataset:generate task to create fake URLs
-gem 'faker'
+gem 'faker', :require => false
