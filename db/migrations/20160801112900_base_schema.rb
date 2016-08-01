@@ -6,6 +6,7 @@ Sequel.migration do
             String :referrer, :null => true
             DateTime :created_at, :null => false
             String :hash, :null => false
+            index [:id, :url, :created_at]
         end
     end
 end
