@@ -6,8 +6,7 @@ Sequel.migration do
             String :referrer, :null => true
             DateTime :created_at, :null => false
             String :hash, :null => false
-            index [:id, :url, :created_at]
-            index [:id, :url, :referrer, :created_at]
+            index [:created_at, :url, :referrer] # used in both reports, order matters!
         end
     end
 end

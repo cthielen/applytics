@@ -1,4 +1,4 @@
 Rails.application.routes.draw do
-  get "/top_urls" => "reports#top_urls"
-  get "/top_referrers" => "reports#top_referrers"
+  get "/top_urls" => "reports#top_urls", defaults: { format: :json }
+  get "/top_referrers" => "reports#top_referrers", defaults: { format: :json }
 end

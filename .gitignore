@@ -15,3 +15,6 @@
 # Ignore sensitive database configuration files
 config/database.yml
 
+# Ignore developer tool files
+.byebug_history
+

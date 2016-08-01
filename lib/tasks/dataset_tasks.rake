@@ -44,10 +44,7 @@ namespace :dataset do
     time_11_days_ago = (Time.now - 11.days).to_f
     rand_time_duration = (Time.now.to_f - time_11_days_ago)
 
-    # Connect to the database
-    db = Sequel.connect($DB_URL)
-
-    # TODO: Use multiple threads to generate and insert data much, much faster.
+    # TODO: Use multiple threads to generate and insert data faster.
 
     id = 1
     (Integer(args[:num_rows]) / BATCH_SIZE).times.each do
@@ -68,7 +65,7 @@ namespace :dataset do
       end
 
       # Use import for faster INSERTs
-      db[:logs].import(
+      $db[:logs].import(
         [:id, :url, :referrer, :created_at, :hash],
         rows
       )

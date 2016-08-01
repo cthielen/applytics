@@ -19,11 +19,11 @@ $DB_URL = $DB_CONFIG["database"]["url"]
 # have been run.
 
 # Test connect to the database
-db = Sequel.connect($DB_URL)
+$db = Sequel.connect($DB_URL)
 
 # Ensure the schema exists.
 begin
-  db.schema(:logs)
+  $db.schema(:logs)
 rescue Sequel::DatabaseConnectionError => e
   STDERR.puts e
   STDERR.puts "Unable to connect to database #{$DB_URL}"
@@ -35,5 +35,3 @@ rescue Sequel::DatabaseError => e
   STDERR.puts "Verify that rake task db:migrate has been executed."
   exit(-1)
 end
-
-db.disconnect
