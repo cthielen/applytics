@@ -33,3 +33,6 @@ gem 'sequel', '~> 4.36.0'
 
 # Require MySQL as a SQL backend
 gem 'mysql2'
+
+# Used by dataset:generate task to create fake URLs
+gem 'faker'

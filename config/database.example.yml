@@ -1,5 +1,2 @@
 database:
-    host: localhost
-    database: applytics
-    username: root
-    password:
+    url: mysql2://username:password@host/db_name
