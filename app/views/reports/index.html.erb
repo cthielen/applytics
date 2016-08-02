@@ -1,0 +1,20 @@
+<div ng-app="applytics" ng-controller="reportController as report" class="container-fluid">
+  <div class="row">
+    <div class="col-md-12">
+        <ul class="nav nav-pills" style="padding-bottom: 0.5em;">
+            <li role="presentation" ng-class="{active: currentReport == 'urls'}"><a href="#" ng-click="switchReport('urls')">Top URLs</a></li>
+            <li role="presentation" ng-class="{active: currentReport == 'referrers'}"><a href="#" ng-click="switchReport('referrers')">Top Referrers</a></li>
+        </ul>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <table ng-table-dynamic="report.tableParams with report.cols" class="table table-condensed table-bordered table-striped">
+        <tr ng-repeat="row in $data">
+          <td ng-repeat="col in $columns">{{row[col.field]}}</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>

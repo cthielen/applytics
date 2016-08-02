@@ -36,3 +36,12 @@ gem 'mysql2'
 
 # Used by dataset:generate task to create fake URLs
 gem 'faker', :require => false
+
+# For jQuery support
+gem 'jquery-rails'
+
+# For the AngularJS-based front-end
+gem 'angularjs-rails'
+
+# For Twitter Bootstrap support
+gem 'bootstrap-sass', '~> 3.3.6'

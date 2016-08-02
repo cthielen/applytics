@@ -1,7 +1,14 @@
 class ReportsController < ApplicationController
+    # Provides the main AngularJS-based application
+    def index
+    end
+
     # Top URLs for a the last 5 days
     def top_urls
-        @logs = Rails.cache.fetch("top_urls", expires_in: 1.hours) do
+        # TODO: @cache_key should contain some kind of last_modified date for the data set
+        @cache_key = "top_urls"
+
+        @logs = Rails.cache.fetch(@cache_key, expires_in: 1.hours) do
             logs = {}
             $db.fetch("SELECT
                         date(created_at) AS date, url, count(*) AS visits
@@ -22,12 +29,14 @@ class ReportsController < ApplicationController
 
     # Top 5 referrers for the top 10 URLs groupped by day.
     def top_referrers
-        @logs = Rails.cache.fetch("top_referrers", expires_in: 1.hours) do
+        # TODO: @cache_key should contain some kind of last_modified date for the data set
+        @cache_key = "top_referrers"
+
+        @logs = Rails.cache.fetch(@cache_key, expires_in: 1.hours) do
             logs = {}
             for i in 0..4 do
                 date = Time.at(Time.now - i.days)
                 key = date.strftime("%Y-%m-%d")
-                puts "key: #{key}"
                 logs[key] = []
                 $db.fetch("SELECT
                             date(created_at) AS day, url, count(*) AS visits
