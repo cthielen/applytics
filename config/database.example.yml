@@ -1,2 +1,5 @@
-database:
+development:
     url: mysql2://username:password@host/db_name
+
+test:
+    url: sqlite://db/test.db

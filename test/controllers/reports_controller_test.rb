@@ -1,13 +1,16 @@
 require 'test_helper'
 
+# TODO: Support SQLite for Sequel when Rails.env == "test" and seed with sample data.
 class ReportsControllerTest < ActionController::TestCase
-  # TODO: Write me.
   test "top_urls" do
-    assert false
+    get :top_urls, { :format => 'json' }
+    assert_response :success
+    assert_not_nil assigns(:logs)
   end
 
-  # TODO: Write me.
   test "top_referrers" do
-    assert false
+    get :top_referrers, { :format => 'json' }
+    assert_response :success
+    assert_not_nil assigns(:logs)
   end
 end

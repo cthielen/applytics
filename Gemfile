@@ -34,6 +34,9 @@ gem 'sequel', '~> 4.36.0'
 # Require MySQL as a SQL backend
 gem 'mysql2'
 
+# Require SQLite for a testing SQL backend
+gem 'sqlite3'
+
 # Used by dataset:generate task to create fake URLs
 gem 'faker', :require => false
 

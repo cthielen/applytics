@@ -12,7 +12,7 @@ else
   exit(-1)
 end
 
-$DB_URL = $DB_CONFIG["database"]["url"]
+$DB_URL = $DB_CONFIG[Rails.env]["url"]
 
 # Check that the needed table exists. We'll consider this a proxy for the
 # proper schema to exist. TODO: Research how Sequel gem users ensure migrations
@@ -29,9 +29,7 @@ rescue Sequel::DatabaseConnectionError => e
   STDERR.puts "Unable to connect to database #{$DB_URL}"
   STDERR.puts "Verify your connection settings in config/database.yml."
   exit(-1)
-rescue Sequel::DatabaseError => e
-  STDERR.puts e
-  STDERR.puts "Database credentials valid but unable to find schema."
-  STDERR.puts "Verify that rake task db:migrate has been executed."
-  exit(-1)
+rescue Sequel::DatabaseError, Sequel::Error => e
+  # Connected but could not find schema.
+  # We can't error out here as they may be running rake db:migrate
 end
