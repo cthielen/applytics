@@ -46,6 +46,8 @@ namespace :dataset do
 
     # TODO: Use multiple threads to generate and insert data faster.
 
+    $db = Sequel.connect($DB_URL)
+
     id = 1
     (Integer(args[:num_rows]) / BATCH_SIZE).times.each do
       rows = []
