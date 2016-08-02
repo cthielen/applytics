@@ -1,28 +1,25 @@
-== README
+== Setup Instructions
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Tested with Ruby 2.3.1p112, Rails 4.2.7 on OS X 10.11.6 with MySQL 5.7.14
 
-Things you may want to cover:
+1. Run 'bundle install' to install dependencies.
+2. Copy config/database.example.yml to config/database.yml and fill in appropriate values.
+3. Run bin/rake db:migrate to generate the schema. RAILS_ENV=development was used.
+4. Run bin/rake dataset:generate[1000000] to generate 1m rows of data. This process takes about two minutes.
+5. Run bin/rails s to start the development server.
+6. Navigate to http://localhost:3000/
 
-* Ruby version
+== Notes
+This project attempted to follow the advice of not spending more than 3-4 hours on it. As a result, the
+following areas could still use some work:
 
-* System dependencies
+    1. Rails and AngularJS tests (controller JSON structure, UI sorting, response correctness)
+    2. Server-side pagination (Array.prototype.slice() is being used as a poor man's pagination)
 
-* Configuration
+== Performance Characteristics
 
-* Database creation
+Tested on a 2.3 GHz i7.
 
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
-
-
-Please feel free to use a different markup language if you do not plan to run
-<tt>rake doc:app</tt>.
+ * Generating 1m rows: ~120 seconds on a 2.3 GHz i7 with a local MySQL 5.7
+ * /top_urls: 3.1s first load (2.5 SQL, 0.6 JSON serialization), 0.6s cached load
+ * /top_referrers: 2.9s first load (2.9 SQL, 0.0 JSON serialization), 0.005s cached load
