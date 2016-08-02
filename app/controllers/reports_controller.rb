@@ -57,10 +57,10 @@ class ReportsController < ApplicationController
                         FROM
                             applytics.logs
                         WHERE
-                            date(created_at) = '2016-08-01'
+                            date(created_at) = date(:date)
                         AND
-                            url = 'http://klein.biz/imogene'
-                        GROUP BY referrer, url ORDER BY visits DESC limit 0,5") do |subrow|
+                            url = :url
+                        GROUP BY referrer, url ORDER BY visits DESC limit 0,5", :date => date, :url => row[:url]) do |subrow|
                         site[:referrers] << { url: subrow[:referrer], visits: subrow[:visits] }
                     end
 
