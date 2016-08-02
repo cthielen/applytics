@@ -53,7 +53,8 @@ namespace :dataset do
       rows = []
       BATCH_SIZE.times.each do
         url = unique_urls.sample
-        referrer = unique_urls.sample
+        # Set referrer to nil ~20% of the time
+        referrer = rand > 0.2 ? unique_urls.sample : nil
         created_at = Time.at(rand_time_duration * rand + time_11_days_ago)
         hash = Digest::MD5.hexdigest({id: id, url: url, referrer: referrer, created_at: created_at}.to_s)
 
