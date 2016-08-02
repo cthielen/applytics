@@ -33,9 +33,13 @@ angular.module("reportService", []);
         var sorting = Object.keys(params.sorting()).length > 0;
         if(sorting) {
           var sort_column = Object.keys(params.sorting())[0];
-          var sort_direction = Object.values(params.sorting())[0];
+          var sort_direction = params.sorting()[sort_column];
           _data = _data.sort(function(left, right) {
-            return sort_direction == "desc" ? left[sort_column] < right[sort_column] : left[sort_column] >= right[sort_column];
+            if(sort_direction == "desc") {
+              return left[sort_column] < right[sort_column] ? 1 : -1
+            } else {
+              return left[sort_column] >= right[sort_column] ? 1 : -1
+            }
           });
         }
 
@@ -72,9 +76,13 @@ angular.module("reportService", []);
         var sorting = Object.keys(params.sorting()).length > 0;
         if(sorting) {
           var sort_column = Object.keys(params.sorting())[0];
-          var sort_direction = Object.values(params.sorting())[0];
+          var sort_direction = params.sorting()[sort_column];
           _data = _data.sort(function(left, right) {
-            return sort_direction == "desc" ? left[sort_column] < right[sort_column] : left[sort_column] >= right[sort_column];
+            if(sort_direction == "desc") {
+              return left[sort_column] < right[sort_column] ? 1 : -1
+            } else {
+              return left[sort_column] >= right[sort_column] ? 1 : -1
+            }
           });
         }
 
@@ -142,7 +150,6 @@ angular.module("reportService", []);
       }
 
       self.tableParams.reload();
-      console.log("report switch to: " + name);
     }
   }
 })();
