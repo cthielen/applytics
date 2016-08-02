@@ -16,6 +16,12 @@ following areas could still use some work:
     1. Rails and AngularJS tests (controller JSON structure, UI sorting, response correctness)
     2. Server-side pagination (Array.prototype.slice() is being used as a poor man's pagination)
 
+The two JSON routes also cache their data, so be sure to run:
+
+    bin/rake tmp:cache:clear
+
+should you wish to swap out the datasets.
+
 == Performance Characteristics
 
 Tested on a 2.3 GHz i7.
