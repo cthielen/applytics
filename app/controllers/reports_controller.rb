@@ -60,6 +60,8 @@ class ReportsController < ApplicationController
                             date(created_at) = date(:date)
                         AND
                             url = :url
+                        AND
+                            referrer is not NULL
                         GROUP BY referrer, url ORDER BY visits DESC limit 0,5", :date => date, :url => row[:url]) do |subrow|
                         site[:referrers] << { url: subrow[:referrer], visits: subrow[:visits] }
                     end
