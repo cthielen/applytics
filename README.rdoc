@@ -1,5 +1,7 @@
 == Setup Instructions
 
+Requirements: Ruby 2.x, Rails 4.2.x, MySQL 5.7 (earlier versions likely work)
+
 Tested with Ruby 2.3.1p112, Rails 4.2.7 on OS X 10.11.6 with MySQL 5.7.14
 
 1. Run 'bundle install' to install dependencies.
@@ -26,6 +28,6 @@ should you wish to swap out the datasets.
 
 Tested on a 2.3 GHz i7.
 
- * Generating 1m rows: ~130 seconds on a 2.3 GHz i7 with a local MySQL 5.7 with indicies, ~90s without
+ * Generating 1m rows: ~145 seconds on a 2.3 GHz i7 with a local MySQL 5.7 with indicies, ~90s without
  * /top_urls: 3.1s first load (2.5 SQL, 0.6 JSON serialization), 0.6s cached load
  * /top_referrers: 2.9s first load (2.9 SQL, 0.0 JSON serialization), 0.005s cached load

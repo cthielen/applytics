@@ -10,11 +10,12 @@ namespace :dataset do
     BATCH_SIZE = 25000     # size of INSERT SQL batch. Tune for performance.
     require 'faker'
 
+    num_rows = args[:num_rows]
+
     # Check for the proper command line arguments
-    if args[:num_rows].nil?
-      STDERR.puts "Please specify the number of rows to be generated, e.g.:"
-      STDERR.puts "\tbin/rake dataset:generate[1000000]"
-      exit(-1)
+    if num_rows.nil?
+      puts "No row count specified for generation. Defaulting to 1m."
+      num_rows = 1000000
     elsif Integer(args[:num_rows]) % BATCH_SIZE != 0
       # Ensure we have an evenly divisible batch size. This makes our generating loop
       # a little easier to work with.
@@ -34,7 +35,7 @@ namespace :dataset do
     # Ensure our required URLs exist. See eng.exercise.md.
     unique_urls << "http://apple.com" << "https://apple.com" << "https://www.apple.com" << "http://developer.apple.com" << "http://en.wikipedia.org" << "http://opensource.org"
 
-    puts "Generating #{args[:num_rows]} rows based on #{unique_urls.length} URLs ..."
+    puts "Generating #{num_rows} rows based on #{unique_urls.length} URLs ..."
 
     start_time = Time.now
 
@@ -46,30 +47,21 @@ namespace :dataset do
 
     # TODO: Use multiple threads to generate and insert data faster.
 
-    $db = Sequel.connect($DB_URL)
-
-    id = 1
-    (Integer(args[:num_rows]) / BATCH_SIZE).times.each do
+    (Integer(num_rows) / BATCH_SIZE).times.each do
       rows = []
       BATCH_SIZE.times.each do
         url = unique_urls.sample
         # Set referrer to nil ~20% of the time
         referrer = rand > 0.2 ? unique_urls.sample : nil
         created_at = Time.at(rand_time_duration * rand + time_11_days_ago)
-        hash = Digest::MD5.hexdigest({id: id, url: url, referrer: referrer, created_at: created_at}.to_s)
 
         # We will use MySQL to generate the MD5 column for speed. Set to '' for now to satisfy constraints.
-        rows << [id, url, referrer, created_at, hash]
-
-        # TODO: Use a MySQL primary key for 'id'. Auto-increment. This should be done as a MySQL auto-incrementing primary key
-        # but batch inserting the records + the Ruby-based Digest::MD5 was taking a little longer
-        # to solve than I would have liked.
-        id = id + 1
+        rows << [url, referrer, created_at]
       end
 
       # Use import for faster INSERTs
-      $db[:logs].import(
-        [:id, :url, :referrer, :created_at, :hash],
+      LogEntry.import(
+        [:url, :referrer, :created_at],
         rows
       )
     end
