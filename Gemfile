@@ -37,6 +37,9 @@ gem 'mysql2'
 # Require SQLite for a testing SQL backend
 gem 'sqlite3'
 
+# For Rails-ian sequel support
+gem 'sequel-rails'
+
 # Used by dataset:generate task to create fake URLs
 gem 'faker', :require => false
 
