@@ -1,5 +1,10 @@
 development:
-    url: mysql2://username:password@host/db_name
+  adapter: mysql2
+  database: your_database
+  user: your_user
+  password: your_password
+  # Or use:
+  #url: "mysql://myuser:mypass@host/somedatabase"
 
 test:
     url: sqlite://db/test.db
