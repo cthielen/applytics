@@ -9,21 +9,22 @@ class ReportsController < ApplicationController
         @cache_key = "top_urls"
 
         @logs = Rails.cache.fetch(@cache_key, expires_in: 1.hours) do
-            logs = {}
-            $db.fetch("SELECT
-                        date(created_at) AS date, url, count(*) AS visits
-                       FROM
-                        logs
-                       WHERE
-                        created_at BETWEEN (CURDATE() - INTERVAL 4 DAY) AND (CURDATE() + INTERVAL 4 DAY)
-                      GROUP BY
-                        date(created_at), url"
-                    ) do |row|
-                key = row[:date]
-                logs[key] = [] if logs[key].nil?
-                logs[key] << { :url => row[:url], :visits => row[:visits] }
-            end
-            logs
+          logs = {}
+          LogEntry.select(
+            Sequel.as(Sequel.function(:date, :created_at), "date"),
+            :url,
+            Sequel.as(Sequel.function(:count, "*"), :visits)
+          ).where(
+            "created_at BETWEEN (CURDATE() - INTERVAL 4 DAY) AND (CURDATE() + INTERVAL 4 DAY)"
+          ).group(
+            Sequel.function(:date, :created_at),
+            :url
+          ).each do |row|
+            key = row[:date]
+            logs[key] = [] if logs[key].nil?
+            logs[key] << { :url => row[:url], :visits => row[:visits] }
+          end
+          logs
         end
     end
 
@@ -38,31 +39,42 @@ class ReportsController < ApplicationController
                 date = Time.at(Time.now - i.days)
                 key = date.strftime("%Y-%m-%d")
                 logs[key] = []
-                $db.fetch("SELECT
-                            date(created_at) AS day, url, count(*) AS visits
-                        FROM
-                            applytics.logs
-                        WHERE
-                            date(created_at) = date(:date)
-                        GROUP BY
-                            date(created_at), url ORDER BY day DESC, visits DESC limit 0,10", :date => date) do |row|
+                LogEntry.select(
+                  Sequel.as(Sequel.function(:date, :created_at), "day"),
+                  :url,
+                  Sequel.as(Sequel.function(:count, "*"), :visits)
+                ).where({
+                  Sequel.function(:date, :created_at) => Sequel.function(:date, date)
+                }).group(
+                  Sequel.function(:date, :created_at),
+                  :url
+                ).order(
+                  Sequel.expr(:day).desc,
+                  Sequel.expr(:visits).desc
+                ).limit(
+                  10
+                ).each do |row|
                     site = {}
                     site[:url] = row[:url]
                     site[:visits] = row[:visits]
                     site[:referrers] = []
 
                     # Subquery for the referrers. TODO: Rework the SQL to support including the referrers if possible.
-                    $db.fetch("SELECT
-                            url, referrer, count(*) AS visits
-                        FROM
-                            applytics.logs
-                        WHERE
-                            date(created_at) = date(:date)
-                        AND
-                            url = :url
-                        AND
-                            referrer is not NULL
-                        GROUP BY referrer, url ORDER BY visits DESC limit 0,5", :date => date, :url => row[:url]) do |subrow|
+                    LogEntry.select(
+                      :url,
+                      :referrer,
+                      Sequel.as(Sequel.function(:count, "*"), :visits)
+                    ).where({
+                      Sequel.function(:date, :created_at) => Sequel.function(:date, date),
+                      :url => row[:url]
+                    }).exclude(
+                      :referrer => nil
+                    ).group(
+                      :referrer,
+                      :url
+                    ).order(
+                      Sequel.expr(:visits).desc
+                    ).limit(5).each do |subrow|
                         site[:referrers] << { url: subrow[:referrer], visits: subrow[:visits] }
                     end
 
